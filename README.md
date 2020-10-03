@@ -17,7 +17,7 @@
   </a>
 </p>
 
-> Shadowed Editor.js element
+> Shadowed Editor.js element with iframe
 
 ## 💡 Motivation
 
