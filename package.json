@@ -1,7 +1,7 @@
 {
   "name": "editorjs-element",
   "version": "0.0.0",
-  "description": "Shadowed Editor.js element",
+  "description": "Shadowed Editor.js element with iframe",
   "keywords": [
     "codex",
     "editor",
