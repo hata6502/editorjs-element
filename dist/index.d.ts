@@ -1,5 +1,5 @@
 import type { OutputData } from '@editorjs/editorjs';
-interface IframeWindow extends Window {
+interface EditorJSElementWindow extends Window {
     editorJSElement: {
         closeToolbars: () => void;
         load: (arg: {
@@ -23,4 +23,4 @@ interface SavedMessageData extends EditorJSElementMessageData {
     outputData: OutputData;
 }
 declare type MessageData = MutatedMessageData | PointerdownMessageData | SavedMessageData | object | undefined;
-export type { IframeWindow, MessageData, MutatedMessageData, PointerdownMessageData, SavedMessageData };
+export type { EditorJSElementWindow, MessageData, MutatedMessageData, PointerdownMessageData, SavedMessageData };

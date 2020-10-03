@@ -21,24 +21,6 @@
 
 ## 💡 Motivation
 
-### ✨ [Demo](https://hata6502.github.io/editorjs-element/)
-
-![Demo](https://user-images.githubusercontent.com/7702653/93618045-bf5aac00-fa11-11ea-8a5e-959b56a497fb.gif)
-
-## Install
-
-### Install via yarn
-
-```sh
-yarn add editorjs-element
-```
-
-### Load from CDN
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/editorjs-element@latest"></script>
-```
-
 ## Usage
 
 ## Build
