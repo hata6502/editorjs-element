@@ -1,8 +1,112 @@
 import debounce from 'debounce';
 import EditorJS from '@editorjs/editorjs';
+import type {OutputData} from '@editorjs/editorjs';
 
+/*import type IframeWindow from './IframeWindow';
+import EditorJSInlineError from './EditorJSInlineError';
+
+class EditorJSInlineElement extends HTMLElement {
+  #iframe?: HTMLIFrameElement;
+
+  closeToolbars() {
+    const iframeWorkerWindow = this.#iframe.contentWindow as IframeWindow;
+
+    iframeWorkerWindow.editorJSInline.closeToolbars();
+  }
+
+  connectedCallback() {
+    this.#iframe.addEventListener('load', () => {
+      if (!this.#iframe?.contentWindow) {
+        throw new EditorJSInlineError();
+      }
+
+      const iframeWorkerWindow = this.#iframe.contentWindow as IframeWindow;
+
+      iframeWorkerWindow.editorJSInline.load({
+        id,
+      });
+    });
+  }
+}
+
+export default EditorJSInlineElement;*/
+
+/*import type {
+  InlineTool,
+} from '@editorjs/editorjs';
+import EditorJSInlineElement from './EditorJSInlineElement';
+import type MessageData from './MessageData';
+import type { MutatedMessageData, SavedMessageData } from './MessageData';
+
+class EditorJSInline implements InlineTool {
+  render() {
+    setTimeout(() => {
+      document.addEventListener('pointerdown', () => {
+        codexEditor
+          .querySelectorAll('editorjs-inline')
+          .forEach((element) =>
+            (element as EditorJSInlineElement).closeToolbars()
+          );
+      });
+
+      window.addEventListener(
+        'message',
+        (event) => {
+          const messageData: MessageData = event.data;
+
+          if (
+            typeof messageData !== 'object' ||
+            !('editorJSInline' in messageData)
+          ) {
+            return;
+          }
+
+          const editorJSInline = codexEditor.querySelector(
+            `editorjs-inline[data-id="${messageData.id}"]`
+          ) as EditorJSInlineElement | null;
+
+          const action = {
+            mutated: () => {
+              if (!editorJSInline) {
+                return;
+              }
+
+              const { scrollHeight } = messageData as MutatedMessageData;
+
+              editorJSInline.setHeight({ height: `${scrollHeight}px` });
+            },
+            pointerdown: () => {
+              codexEditor
+                .querySelectorAll(
+                  `editorjs-inline:not([data-id="${messageData.id}"])`
+                )
+                .forEach((element) =>
+                  (element as EditorJSInlineElement).closeToolbars()
+                );
+            },
+            saved: () => {
+              if (!editorJSInline) {
+                return;
+              }
+
+              const { outputData } = messageData as SavedMessageData;
+
+              editorJSInline.dataset.output = JSON.stringify(outputData);
+            },
+          }[messageData.type];
+
+          typeof action === 'function' && action(); // lgtm [js/unvalidated-dynamic-method-call]
+        },
+        false
+      );
+    });
+
+    return button;
+  }
+}
+*/
 interface IframeWindow extends Window {
-  editorJSInline: {
+  editorJSElement: {
     closeToolbars: () => void;
     load: (arg: {
       id: string;
@@ -10,21 +114,23 @@ interface IframeWindow extends Window {
   };
 }
 
-interface EditorJSInlineMessageData {
-  editorJSInline: true;
+declare const window: IframeWindow;
+
+interface EditorJSElementMessageData {
+  editorJSElement: true;
   id: string;
 }
 
-interface MutatedMessageData extends EditorJSInlineMessageData {
+interface MutatedMessageData extends EditorJSElementMessageData {
   type: 'mutated';
   scrollHeight: number;
 }
 
-interface PointerdownMessageData extends EditorJSInlineMessageData {
+interface PointerdownMessageData extends EditorJSElementMessageData {
   type: 'pointerdown';
 }
 
-interface SavedMessageData extends EditorJSInlineMessageData {
+interface SavedMessageData extends EditorJSElementMessageData {
   type: 'saved';
   outputData: OutputData;
 }
@@ -36,29 +142,24 @@ type MessageData =
   | object
   | undefined;
 
-declare const window: IframeWindow;
-
 let editorJS: EditorJS;
 
-window.editorJSInline = {
+window.editorJSElement = {
   closeToolbars: () => {
     editorJS.inlineToolbar.close();
     editorJS.toolbar.close();
   },
-  load: ({ id, editorConfig }) => {
+  load: ({ id }) => {
     const holder = document.createElement('div');
 
     document.body.appendChild(holder);
 
     editorJS = new EditorJS({
-      ...editorConfig,
       holder,
-      onChange: async (api) => {
-        editorConfig.onChange?.(api);
-
+      onChange: async () => {
         const outputData = await editorJS.save();
         const savedMessageData: SavedMessageData = {
-          editorJSInline: true,
+          editorJSElement: true,
           id,
           type: 'saved',
           outputData,
@@ -92,7 +193,7 @@ window.editorJSInline = {
         }
 
         const mutatedMessageData: MutatedMessageData = {
-          editorJSInline: true,
+          editorJSElement: true,
           id,
           type: 'mutated',
           scrollHeight: document.body.scrollHeight,
@@ -111,7 +212,7 @@ window.editorJSInline = {
 
     document.addEventListener('pointerdown', () => {
       const pointerdownMessageData: PointerdownMessageData = {
-        editorJSInline: true,
+        editorJSElement: true,
         id,
         type: 'pointerdown',
       };

@@ -12,7 +12,6 @@ jobs:
         with:
           node-version: 12.x
       - run: yarn
-      - run: yarn webpack-iframe-worker && yarn webpack-index
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
