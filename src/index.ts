@@ -1,11 +1,14 @@
 import debounce from "debounce";
 import EditorJS from "@editorjs/editorjs";
-import type { OutputData } from "@editorjs/editorjs";
+import type { EditorConfig, OutputData } from "@editorjs/editorjs";
 
 interface EditorJSElementWindow extends Window {
   editorJSElement: {
     closeToolbars: () => void;
-    load: (arg: { id: string }) => void;
+    load: (arg: {
+      id: string;
+      editorConfig: Omit<EditorConfig, "holder">;
+    }) => void;
   };
 }
 
@@ -44,14 +47,17 @@ window.editorJSElement = {
     editorJS.inlineToolbar.close();
     editorJS.toolbar.close();
   },
-  load: ({ id }) => {
+  load: ({ id, editorConfig }) => {
     const holder = document.createElement("div");
 
     document.body.appendChild(holder);
 
     editorJS = new EditorJS({
+      ...editorConfig,
       holder,
-      onChange: async () => {
+      onChange: async (api) => {
+        editorConfig.onChange?.(api);
+
         const outputData = await editorJS.save();
         const savedMessageData: SavedMessageData = {
           editorJSElement: true,
