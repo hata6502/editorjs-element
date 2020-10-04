@@ -1,3 +1,4 @@
+<!-- markdownlint-disable first-line-h1 -->
 <h1 align="center">Welcome to editorjs-element 👋</h1>
 <p>
   <a href="https://www.npmjs.com/package/editorjs-element" target="_blank">
@@ -21,7 +22,22 @@
 
 ## 💡 Motivation
 
+DOM event, CSS Style, etc may conflict each other when multiple Editor.js instances are launched in same page.
+By launching Editor.js in iframe, these problems are resolved forcibly. This repository provides the template of Editor.js in iframe.
+
 ## Usage
+
+Launch editorjs-element by loading [dist/index.html](https://github.com/hata6502/editorjs-element/blob/main/dist/index.html) in iframe.
+
+```html
+<iframe src="index.html"></iframe>
+```
+
+editorjs-element can be communicated via [window.postMessage](https://developer.mozilla.org/ja/docs/Web/API/Window/postMessage).
+The message interface is [here](https://github.com/hata6502/editorjs-element/blob/main/dist/index.d.ts),
+and example is [here (window.addEventListener)](https://github.com/hata6502/editorjs-inline/blob/master/src/index.ts).
+
+This repository is a template, please fork it in order to customize Editor.js!
 
 ## Build
 
@@ -39,7 +55,7 @@ yarn test
 
 <img alt="hata6502" src="https://avatars.githubusercontent.com/hata6502" width="48" /> **hata6502**
 
-- Website: https://b-hood.site/
+- Website: <https://b-hood.site/>
 - Twitter: [@hata6502](https://twitter.com/hata6502)
 - Github: [@hata6502](https://github.com/hata6502)
 
